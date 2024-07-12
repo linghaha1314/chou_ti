@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Exam</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin: 10px 0;
+        }
+
+        .input-group label {
+            display: inline-block;
+            width: 100px;
+            text-align: right;
+            margin-right: 10px;
+        }
+
+        .input-group input {
+            padding: 5px;
+            width: 200px;
+        }
+
+        .stations {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .station {
+            width: 120px;
+            height: 200px;
+            background-color: #8B4513;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .station h2 {
+            background-color: #4A4A4A;
+            width: 100%;
+            margin: 0;
+            padding: 10px 0;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .random-number {
+            position: absolute;
+            bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .buttons button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4A4A4A;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .buttons button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .history {
+            overflow: auto;
+            max-height: 500px;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="margin: 0 0 60; height: 300px;">
+        <!-- Email link -->
+        <a href="mailto:name@example.com"> Send Email </a>
+
+        <!-- Phone call link -->
+        <a href="tel:+1234567890"> Call Us </a>
+
+        <!-- SMS link -->
+        <a href="sms:+1234567890"> Send SMS </a>
+
+
+        <details>
+            <summary>点击查看</summary>
+            <p>隐藏内容</p>
+        </details>
+
+        <form>
+            <fieldset>
+                <legend>Personal details</legend>
+                <label for="firstname">First name:</label>
+                <input type="text" id="firstname" name="firstname" />
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" />
+                <label for="contact">Contact:</label>
+                <input type="text" id="contact" name="contact" />
+                <input type="button" value="Submit" />
+            </fieldset>
+        </form>
+        <select>
+            <optgroup label="Fruits">
+               <option>Apple</option>
+               <option>Banana</option>
+               <option>Mango</option>
+            </optgroup>
+            <optgroup label="Vegetables">
+               <option>Tomato</option>
+               <option>Broccoli</option>
+               <option>Carrot</option>
+            </optgroup>
+         </select>
+    </div>
+    <div id="app" class="container">
+        <h1>2024年医师资格考试实践技能考试抽题软件--公共卫生类别</h1>
+        <div class="input-group">
+            <label for="exam-number">准考证号：</label>
+            <input type="text" id="exam-number" v-model="examNumber">
+        </div>
+        <div class="input-group">
+            <label for="name">姓名：</label>
+            <input type="text" id="name" v-model="name">
+        </div>
+        <div class="input-group">
+            <label for="id-number">身份证号：</label>
+            <input type="text" id="id-number" v-model="idNumber">
+        </div>
+        <div class="stations">
+            <div class="station">
+                <h2>第一站</h2>
+                <div class="random-number">{{ firstStationNumber }}</div>
+            </div>
+            <div class="station">
+                <h2>第二站</h2>
+                <div class="random-number">{{ secondStationNumber }}</div>
+            </div>
+            <div class="station">
+                <h2>第三站</h2>
+                <div class="random-number">{{ thirdStationNumber }}</div>
+            </div>
+            <!-- <div class="station">
+        <h2>第四站</h2>
+        <div class="random-number">{{ foreStationNumber }}</div>
+      </div> -->
+        </div>
+        <div class="buttons">
+            <button @click="generateNumbers">抽题</button>
+            <button @click="saveToLocalStorage">复制</button>
+            <button @click="exportData">导出</button>
+        </div>
+        <div class="history">历史信息:
+            <table style="width: 100%;" v-if="history.length > 0">
+                <thead>
+                    <tr>
+                        <th>准考证号</th>
+                        <th>姓名</th>
+                        <th>身份证号</th>
+                        <th>第一站</th>
+                        <th>第二站</th>
+                        <th>第三站</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="record in history" :key="record.id">
+                        <td>{{ record.examNumber }}</td>
+                        <td>{{ record.name }}</td>
+                        <td>{{ record.idNumber }}</td>
+                        <td>{{ record.firstStationNumber }}</td>
+                        <td>{{ record.secondStationNumber }}</td>
+                        <td>{{ record.thirdStationNumber }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <script src="./vue.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                examNumber: '',
+                name: '',
+                idNumber: '',
+                firstStationNumber: '',
+                secondStationNumber: '',
+                thirdStationNumber: '',
+                foreStationNumber: '',
+                history: []
+            },
+            methods: {
+                generateNumbers() {
+                    this.firstStationNumber = '站一-' + this.getRandomNumber(1, 50);
+                    this.secondStationNumber = '站二-' + this.getRandomNumber(1, 100);
+                    const fT = this.getRandomNumber(1, 100)
+                    this.thirdStationNumber = '站三①-' + fT;
+                    this.foreStationNumber = '站三②-' + fT;
+                },
+                getRandomNumber(min, max) {
+                    return Math.floor(Math.random() * (max - min + 1)) + min;
+                },
+                copyToClipboard() {
+                    const textToCopy = `${this.name}\t${this.examNumber}\t${this.firstStationNumber}\t${this.secondStationNumber}\t${this.thirdStationNumber}\t${this.foreStationNumber}`;
+                    const textarea = document.createElement('textarea');
+                    textarea.value = textToCopy;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    alert('信息已复制到剪贴板');
+                },
+                exportData() {
+                    let history = JSON.parse(localStorage.getItem('history')) || [];
+                    if (history.length === 0) {
+                        alert('没有历史记录');
+                        return;
+                    }
+                    const csvContent = history.map(record =>
+                        `${record.examNumber}\t${record.name}\t${record.idNumber}\t${record.firstStationNumber}\t${record.secondStationNumber}\t${record.thirdStationNumber}`
+                    ).join('\n');
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const link = document.createElement('a');
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', 'history.csv');
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                },
+                saveToLocalStorage() {
+                    const record = {
+                        examNumber: this.examNumber,
+                        name: this.name,
+                        idNumber: this.idNumber,
+                        firstStationNumber: this.firstStationNumber,
+                        secondStationNumber: this.secondStationNumber,
+                        thirdStationNumber: this.thirdStationNumber
+                    };
+                    this.history.push(record);
+                    let history = JSON.parse(localStorage.getItem('history')) || [];
+                    history.push(record);
+                    localStorage.setItem('history', JSON.stringify(history));
+
+                    this.copyToClipboard(record);
+                }
+            },
+            mounted() {
+                this.history = JSON.parse(localStorage.getItem('history')) || [];
+                console.log(this.history)
+            }
+        });
+    </script>
+</body>
+
+</html>
